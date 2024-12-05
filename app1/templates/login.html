@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Page Heading -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Login to Your Account</h1>
+            <p class="lead">Enter your credentials to access your account.</p>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    <div class="row mb-3">
+        <div class="col-12">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form action="/app1/login" method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Link -->
+    <div class="text-center mt-4">
+        <h4>Don't have an account? <a href="/app1/register" class="btn btn-link">Register</a></h4>
+    </div>
+
+</div>
+{% endblock %}

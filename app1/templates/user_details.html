@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{%if user.is_authenticated%}
+<!-- Main container -->
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">User Details</h1>
+            <p class="lead">Here are the detailed information of the selected user.</p>
+        </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <!-- Display User Details -->
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>ID</th>
+                    <td>{{ entity.id }}</td>
+                </tr>
+                <tr>
+                    <th>Persons</th>
+                    <td>{{ entity.persons|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Phone Numbers</th>
+                    <td>{{ entity.phone_numbers|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Emails</th>
+                    <td>{{ entity.emails|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Skills</th>
+                    <td>{{ entity.skills|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Designations</th>
+                    <td>{{ entity.designations|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Organizations</th>
+                    <td>{{ entity.organizations|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Dates</th>
+                    <td>{{ entity.dates|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Education</th>
+                    <td>{{ entity.educations|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Institutes</th>
+                    <td>{{ entity.institutes|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Date of Birth</th>
+                    <td>{{ entity.date_of_birth|join:', ' }}</td>
+                </tr>
+                <tr>
+                    <th>Actions</th>
+                    <td>
+                        <form action="/app1/home/{{ entity.id }}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete" value="{{ entity.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+{%endif%}
+{% endblock %}

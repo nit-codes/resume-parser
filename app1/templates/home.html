@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container mt-5">
+
+    <!-- Logout Button at the Top -->
+    <div class="row mb-4">
+        <div class="col-12 text-end">
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-lg">Logout</a>
+        </div>
+    </div>
+
+    <!-- Heading Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary">Resume Parser</h1>
+        </div>
+    </div>
+
+    <!-- File Upload Form -->
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-success">Upload PDF</h5>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="pdf_file" class="form-label">Choose a PDF File</label>
+                            <input type="file" class="form-control" name="pdf_file" accept=".pdf" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Upload and Extract</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Extracted Data Table -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-3 text-secondary">Extracted Entities</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover shadow">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Persons</th>
+                            <th>Phone Numbers</th>
+                            <th>Emails</th>
+                            <th>Skills</th>
+                            <th>Designations</th>
+                            <th>Organizations</th>
+                            <th>Dates</th>
+                            <th>Education</th>
+                            <th>Institutes</th>
+                            <th>Date of Birth</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entity in page_obj %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td> 
+                            <td>{{ entity.persons.0|truncatewords:2 }}</td>  <!-- Truncate persons -->
+                            <td>{{ entity.phone_numbers|join:', '|truncatewords:3 }}</td> <!-- Truncate phone numbers -->
+                            <td>{{ entity.emails|join:', '|truncatewords:3 }}</td> <!-- Truncate emails -->
+                            <td>{{ entity.skills|join:', '|truncatewords:3 }}</td> <!-- Truncate skills -->
+                            <td>{{ entity.designations|join:', '|truncatewords:3 }}</td> <!-- Truncate designations -->
+                            <td>{{ entity.organizations|join:', '|truncatewords:3 }}</td> <!-- Truncate organizations -->
+                            <td>{{ entity.dates|join:', '|truncatewords:3 }}</td> <!-- Truncate dates -->
+                            <td>{{ entity.educations|join:', '|truncatewords:3 }}</td> <!-- Truncate educations -->
+                            <td>{{ entity.institutes|join:', '|truncatewords:3 }}</td> <!-- Truncate institutes -->
+                            <td>{{ entity.date_of_birth|join:', '|truncatewords:3 }}</td> <!-- Truncate date of birth -->
+
+                            <td class="text-center">
+                                <a href="{% url 'user_details' entity.id %}" class="btn btn-info btn-sm">Details</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="12" class="text-center text-muted">No data available yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container text-center mt-5">
+    <h1 class="display-4 text-primary">Resume Parser</h1>
+    <p class="lead mb-4">Please log in or register to access the features.</p>
+    <div class="d-flex justify-content-center">
+        <a href="/app1/login" class="btn btn-primary btn-lg mx-2">Login</a>
+        <a href="/app1/register" class="btn btn-success btn-lg mx-2">Register</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
